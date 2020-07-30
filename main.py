@@ -167,7 +167,7 @@ def chiletrabajos():
     )
     """
     
-schedule.every().day.at('16:35').do(chiletrabajos)
+schedule.every().day.at('16:45').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
