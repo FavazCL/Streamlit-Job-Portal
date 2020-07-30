@@ -6,7 +6,7 @@ import time
 import json
 import schedule
 import os
-from github import Github
+#from github import Github
 
 # Chrome Options Local
 # chrome_options = webdriver.ChromeOptions()
@@ -134,6 +134,8 @@ def chiletrabajos():
         data['ref'] = offer
         offers.append(data)
 
+        print(offers)
+
         time.sleep(10)
         
     # Creamos un archivo json de las ofertas.
@@ -145,7 +147,7 @@ def chiletrabajos():
     
     with open(filename, 'w', encoding='utf-8') as outfile:
         json.dump(offers, outfile, ensure_ascii=False)
-    
+    """
     # Enviamos el archivo creado a github
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
@@ -163,8 +165,9 @@ def chiletrabajos():
         content = data,
         branch = "master"
     )
+    """
     
-schedule.every().day.at('15:55').do(chiletrabajos)
+schedule.every().day.at('16:35').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
