@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 from numpy import array
 import time
 import json
-from github import Github
 import schedule
 import os
+from github import Github
 
 # Chrome Options Local
 # chrome_options = webdriver.ChromeOptions()
