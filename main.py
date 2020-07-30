@@ -41,7 +41,7 @@ def chiletrabajos():
     driver.find_element_by_name("login").click()
     
     time.sleep(10)
-    
+    print('hola')
     # Inicializamos las variables
     firstPage = "https://www.chiletrabajos.cl/encuentra-un-empleo?2=&13=&fecha=1&categoria=&8=&14=&inclusion=&f=2"
     paginations = []
