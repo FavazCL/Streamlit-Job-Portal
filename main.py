@@ -142,7 +142,7 @@ def chiletrabajos():
     
     #directory = os.path.dirname(os.path.realpath(__file__))
     #print(directory)
-    filename = "chiletrabajos-" + now.strftime("%d/%m/%Y-%H:%M:%S") + ".json"
+    commit = "chiletrabajos, el día: " + now.strftime("%d/%m/%Y %H:%M:%S")
     #print(filename)
     #file_path = os.path.join(directory, 'jsonfiles/', filename)
     #print(file_path)
@@ -152,14 +152,13 @@ def chiletrabajos():
 
     #with open(filename, 'w', encoding='utf-8') as outfile:
         #json.dump(offers, outfile, ensure_ascii=False)
-    
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
     repo = "FavazCL/WS-Ofertas"
-    path = filename
+    #path = filename
 
     g = Github(token)
     """
@@ -171,13 +170,14 @@ def chiletrabajos():
     """
     repo = g.get_repo(repo)
     repo.create_file(
-        path = path,
-        message = "add new offers: " + filename,
+        path = 'chiletrabajos',
+        message = "Se agregaron nuevas ofertas de: " + commit,
         content = result,
         branch = "master"
     )
     
-schedule.every().day.at('00:26').do(chiletrabajos)
+schedule.every().day.at('00:43').do(chiletrabajos)
+schedule.every().day.at('00:47').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
