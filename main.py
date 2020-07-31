@@ -142,7 +142,7 @@ def chiletrabajos():
     
     #directory = os.path.dirname(os.path.realpath(__file__))
     #print(directory)
-    filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
+    filename = "chiletrabajos-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
     #print(filename)
     #file_path = os.path.join(directory, 'jsonfiles/', filename)
     #print(file_path)
@@ -170,14 +170,14 @@ def chiletrabajos():
     """
     repo = g.get_repo(repo)
     repo.create_file(
-        path = 'chiletrabajos/',
+        path = 'chiletrabajos/' + filename,
         message = "Se agregaron nuevas ofertas de: " + filename,
         content = result,
         branch = "master"
     )
     
-schedule.every().day.at('01:10').do(chiletrabajos)
-schedule.every().day.at('01:12').do(chiletrabajos)
+schedule.every().day.at('01:19').do(chiletrabajos)
+schedule.every().day.at('01:21').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
