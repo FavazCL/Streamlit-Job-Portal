@@ -157,7 +157,7 @@ def chiletrabajos():
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
     repo = "FavazCL/WS-Ofertas"
-    #path = file_path
+    path = filename
 
     g = Github(token)
     """
@@ -169,13 +169,13 @@ def chiletrabajos():
     """
     repo = g.get_repo(repo)
     repo.create_file(
-        #path = path,
+        path = path,
         message = "add new offers: " + filename,
         content = offers,
         branch = "master"
     )
     
-schedule.every().day.at('00:13').do(chiletrabajos)
+schedule.every().day.at('00:17').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
