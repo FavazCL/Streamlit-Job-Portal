@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 from numpy import array
-import time
+from datetime import datetime
 import json
 import schedule
 import os
@@ -54,7 +54,7 @@ def chiletrabajos():
     driver.get(firstPage)
 
     content = driver.page_source
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, "html.parser")
 
     for pagination in soup.findAll('a', attrs = {'class': 'page-link'}):
         paginations.append(pagination.get('href'))
@@ -70,7 +70,7 @@ def chiletrabajos():
         driver.get(str(pag))
 
         content = driver.page_source
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, "html.parser")
 
         for a in soup.findAll('div', attrs = {'class': 'job-item'}):
             tmp_link = a.find('a')
@@ -88,7 +88,7 @@ def chiletrabajos():
         driver.get(offer)
 
         content = driver.page_source
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, "html.parser")
 
         data = {}
 
@@ -137,11 +137,9 @@ def chiletrabajos():
         time.sleep(10)
         
     # Creamos un archivo json de las ofertas.
-    from datetime import date
+    now = datetime.now()
 
-    today = date.today()
-
-    filename = "chiletrabajos-" + str(today) + ".json"
+    filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S")) + ".json"
     
     with open(filename, 'w', encoding='utf-8') as outfile:
         json.dump(offers, outfile, ensure_ascii=False)
@@ -164,7 +162,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('21:20').do(chiletrabajos)
+schedule.every().day.at('22:00').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
