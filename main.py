@@ -9,12 +9,7 @@ import schedule
 import os
 from github import Github
 
-# Chrome Options Local
-# chrome_options = webdriver.ChromeOptions()
-# prefs = {"profile.managed_default_content_settings.images": 2}
-# chrome_options.add_experimental_option("prefs", prefs)
-
-# Chrome Options Heroku
+# Chrome Options
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 chrome_options.add_argument("--headless")
@@ -24,10 +19,7 @@ prefs = {"profile.managed_default_content_settings.images": 2}
 chrome_options.add_experimental_option("prefs", prefs)
 
 def chiletrabajos():
-    # Abrimos el navegador Chrome Local
-    # driver = webdriver.Chrome(options=chrome_options, executable_path=r'C:\Users\56973\Desktop\WebScrapping\chromedriver.exe')
-    
-    # Abrimos el navegador Chrome Heroku
+    # Abrimos el navegador Chrome
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     
     # Nos logeamos en el portal para obtener los datos restringidos.
@@ -42,7 +34,7 @@ def chiletrabajos():
     driver.find_element_by_name("login").click()
     
     time.sleep(10)
-    print('hola')
+
     # Inicializamos las variables
     firstPage = "https://www.chiletrabajos.cl/encuentra-un-empleo?2=&13=&fecha=1&categoria=&8=&14=&inclusion=&f=2"
     paginations = []
@@ -139,45 +131,26 @@ def chiletrabajos():
         
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    
-    #directory = os.path.dirname(os.path.realpath(__file__))
-    #print(directory)
     filename = "chiletrabajos-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
-    #print(filename)
-    #file_path = os.path.join(directory, 'jsonfiles/', filename)
-    #print(file_path)
-
-    #with open(file_path, 'w', encoding='utf-8') as of:
-    #  json.dump(offers, of, ensure_ascii=False)
-
-    #with open(filename, 'w', encoding='utf-8') as outfile:
-        #json.dump(offers, outfile, ensure_ascii=False)
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
     repo = "FavazCL/WS-Ofertas"
-    #path = filename
 
     g = Github(token)
-    """
-    with open(file_path, 'rb') as f:
-      print('aquiXD')
-      print(f)
-      data = f.read()
-      f.close()
-    """
+
     repo = g.get_repo(repo)
     repo.create_file(
         path = 'chiletrabajos/' + filename,
-        message = "Se agregaron nuevas ofertas de: " + filename,
+        message = "Se agregaron nuevas ofertas desde: " + filename,
         content = result,
         branch = "master"
     )
-    
-schedule.every().day.at('01:19').do(chiletrabajos)
-schedule.every().day.at('01:21').do(chiletrabajos)
+
+# Señalamos que se ejecute todos los días a la hora fijada.
+schedule.every().day.at('20:30').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
