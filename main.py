@@ -176,8 +176,8 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('00:56').do(chiletrabajos)
-schedule.every().day.at('00:58').do(chiletrabajos)
+schedule.every().day.at('01:01').do(chiletrabajos)
+schedule.every().day.at('01:05').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
