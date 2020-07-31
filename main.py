@@ -170,14 +170,14 @@ def chiletrabajos():
     """
     repo = g.get_repo(repo)
     repo.create_file(
-        path = 'chiletrabajos/' + filename,
+        path = 'chiletrabajos/',
         message = "Se agregaron nuevas ofertas de: " + filename,
         content = result,
         branch = "master"
     )
     
-schedule.every().day.at('01:01').do(chiletrabajos)
-schedule.every().day.at('01:05').do(chiletrabajos)
+schedule.every().day.at('01:10').do(chiletrabajos)
+schedule.every().day.at('01:12').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
