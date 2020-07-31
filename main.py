@@ -144,8 +144,8 @@ def chiletrabajos():
     filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
     file_path = os.path.join(directory, 'jsonfiles/', filename)
 
-    result = json.dump(offers, file_path, ensure_ascii=False)
-    print(result)
+    with open(file_path, 'w', encoding='utf-8') as of:
+      json.dump(offers, outfile, ensure_ascii=False)
 
     #with open(filename, 'w', encoding='utf-8') as outfile:
         #json.dump(offers, outfile, ensure_ascii=False)
@@ -170,7 +170,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('22:28').do(chiletrabajos)
+schedule.every().day.at('22:33').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
