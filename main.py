@@ -140,15 +140,15 @@ def chiletrabajos():
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
     
-    directory = os.path.dirname(os.path.realpath(__file__))
-    print(directory)
+    #directory = os.path.dirname(os.path.realpath(__file__))
+    #print(directory)
     filename = "chiletrabajos-" + now.strftime("%d/%m/%Y-%H:%M:%S") + ".json"
-    print(filename)
-    file_path = os.path.join(directory, 'jsonfiles/', filename)
-    print(file_path)
+    #print(filename)
+    #file_path = os.path.join(directory, 'jsonfiles/', filename)
+    #print(file_path)
 
-    with open(file_path, 'w', encoding='utf-8') as of:
-      json.dump(offers, of, ensure_ascii=False)
+    #with open(file_path, 'w', encoding='utf-8') as of:
+    #  json.dump(offers, of, ensure_ascii=False)
 
     #with open(filename, 'w', encoding='utf-8') as outfile:
         #json.dump(offers, outfile, ensure_ascii=False)
@@ -157,25 +157,25 @@ def chiletrabajos():
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
     repo = "FavazCL/WS-Ofertas"
-    path = file_path
+    #path = file_path
 
     g = Github(token)
-    
+    """
     with open(file_path, 'rb') as f:
       print('aquiXD')
       print(f)
       data = f.read()
       f.close()
-    
+    """
     repo = g.get_repo(repo)
     repo.create_file(
-        path = path,
+        #path = path,
         message = "add new offers: " + filename,
-        content = data,
+        content = offers,
         branch = "master"
     )
     
-schedule.every().day.at('23:56').do(chiletrabajos)
+schedule.every().day.at('00:13').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
