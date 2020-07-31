@@ -153,6 +153,8 @@ def chiletrabajos():
     #with open(filename, 'w', encoding='utf-8') as outfile:
         #json.dump(offers, outfile, ensure_ascii=False)
     
+    result = json.dumps(offers, ensure_ascii=False)
+
     # Enviamos el archivo creado a github
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
 
@@ -171,11 +173,11 @@ def chiletrabajos():
     repo.create_file(
         path = path,
         message = "add new offers: " + filename,
-        content = offers,
+        content = result,
         branch = "master"
     )
     
-schedule.every().day.at('00:17').do(chiletrabajos)
+schedule.every().day.at('00:26').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
