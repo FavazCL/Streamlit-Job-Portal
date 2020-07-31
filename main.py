@@ -141,7 +141,7 @@ def chiletrabajos():
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
     
-    directory = osp.path.dirname(os.path.realpath(__file__))
+    directory = osp.path.dirname(osp.path.realpath(__file__))
     print(directory)
     filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
     print(filename)
@@ -176,7 +176,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('23:44').do(chiletrabajos)
+schedule.every().day.at('23:51').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
