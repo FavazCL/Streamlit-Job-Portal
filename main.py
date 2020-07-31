@@ -7,6 +7,7 @@ import json
 import time
 import schedule
 import os
+import os.path as osp
 from github import Github
 
 # Chrome Options Local
@@ -140,14 +141,14 @@ def chiletrabajos():
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
     
-    directory = os.path.dirname(os.path.realpath(__file__))
+    directory = osp.path.dirname(os.path.realpath(__file__))
     print(directory)
     filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
     print(filename)
-    file_path = os.path.join(directory, 'jsonfiles/', filename)
+    file_path = osp.path.join(directory, 'jsonfiles/', filename)
     print(file_path)
 
-    with open(filename, 'w', encoding='utf-8') as of:
+    with open(file_path, 'w', encoding='utf-8') as of:
       json.dump(offers, of, ensure_ascii=False)
 
     #with open(filename, 'w', encoding='utf-8') as outfile:
@@ -175,7 +176,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('23:38').do(chiletrabajos)
+schedule.every().day.at('23:44').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
