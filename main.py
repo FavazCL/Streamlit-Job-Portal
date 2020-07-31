@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from numpy import array
 from datetime import datetime
 import json
+import time
 import schedule
 import os
 from github import Github
@@ -138,8 +139,8 @@ def chiletrabajos():
         
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-
-    filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S")) + ".json"
+    
+    filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
     
     with open(filename, 'w', encoding='utf-8') as outfile:
         json.dump(offers, outfile, ensure_ascii=False)
