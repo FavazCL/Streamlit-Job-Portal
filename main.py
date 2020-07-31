@@ -147,8 +147,8 @@ def chiletrabajos():
     file_path = os.path.join(directory, 'jsonfiles/', filename)
     print(file_path)
 
-    #with open(file_path, 'w', encoding='utf-8') as of:
-      #json.dump(offers, of, ensure_ascii=False)
+    with open(file_path, 'w', encoding='utf-8') as of:
+      json.dump(offers, of, ensure_ascii=False)
 
     #with open(filename, 'w', encoding='utf-8') as outfile:
         #json.dump(offers, outfile, ensure_ascii=False)
@@ -162,6 +162,7 @@ def chiletrabajos():
     g = Github(token)
     
     with open(file_path, 'rb') as f:
+      print('aquiXD')
       print(f)
       data = f.read()
       f.close()
@@ -174,7 +175,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('23:15').do(chiletrabajos)
+schedule.every().day.at('23:32').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
