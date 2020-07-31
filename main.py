@@ -140,10 +140,15 @@ def chiletrabajos():
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
     
+    directory = os.path.dirname(os.path.realpath(__file__))
     filename = "chiletrabajos-" + now.strftime("%d/%m/%Y %H:%M:%S") + ".json"
-    
-    with open(filename, 'w', encoding='utf-8') as outfile:
-        json.dump(offers, outfile, ensure_ascii=False)
+    file_path = os.path.join(directory, 'jsonfiles/', filename)
+
+    dump = json.dump(offers, file_path, ensure_ascii=False)
+    print(dump)
+
+    #with open(filename, 'w', encoding='utf-8') as outfile:
+        #json.dump(offers, outfile, ensure_ascii=False)
     
     # Enviamos el archivo creado a github
     token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
@@ -153,7 +158,9 @@ def chiletrabajos():
 
     g = Github(token)
 
-    data = open(filename, "r").read()
+    with open(file_path, 'rb') as f:
+      data = f.read()
+      f.close()
 
     repo = g.get_repo(repo)
     repo.create_file(
@@ -163,7 +170,7 @@ def chiletrabajos():
         branch = "master"
     )
     
-schedule.every().day.at('22:00').do(chiletrabajos)
+schedule.every().day.at('22:22').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
