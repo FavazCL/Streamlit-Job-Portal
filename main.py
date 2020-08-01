@@ -150,7 +150,7 @@ def chiletrabajos():
     )
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('22:08').do(chiletrabajos)
+schedule.every().day.at('19:30').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
