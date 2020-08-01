@@ -135,7 +135,7 @@ def chiletrabajos():
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
-    token = "c6414b1c28eb04e504e91c06f2ac8a44cbaebdc2"
+    token = "29e578fceb764670077aee08fb42dba51b7eb744"
 
     repo = "FavazCL/WS-Ofertas"
 
@@ -150,7 +150,7 @@ def chiletrabajos():
     )
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('20:30').do(chiletrabajos)
+schedule.every().day.at('22:08').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
