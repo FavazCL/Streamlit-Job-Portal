@@ -88,7 +88,7 @@ def chiletrabajos():
         for head in soup.findAll('div', attrs = {'class': 'no-pointer'}):
             title = head.find('h1', attrs = {'class': 'title'})
             if title is not None:
-              data['title'] = title.text.strip()
+              data['titulo'] = title.text.strip()
 
             head_trs = head.findAll('tr')
 
@@ -111,7 +111,7 @@ def chiletrabajos():
             description = body.find('p', attrs = {'class':'mb-0'})
 
             if description is not None:
-                data['Descripción'] = description.text.strip()
+                data['descripción'] = description.text.strip()
 
             benefits = body.find_all('div', attrs = {'class': 'beneficio-title'})
 
@@ -122,7 +122,7 @@ def chiletrabajos():
                     if benefit is not None:
                         tmp_benefits.append(benefit.text.strip())
 
-                data['Beneficios'] = tmp_benefits
+                data['beneficios'] = tmp_benefits
 
         data['ref'] = offer
         offers.append(data)
@@ -150,7 +150,7 @@ def chiletrabajos():
     )
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('19:30').do(chiletrabajos)
+schedule.every().day.at('19:40').do(chiletrabajos)
 
 while True:
     schedule.run_pending()
