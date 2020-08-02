@@ -18,7 +18,7 @@ from github import Github
 # Chrome Options
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("--headless")
+#chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--no-sandbox")
 prefs = {"profile.managed_default_content_settings.images": 2}
@@ -167,7 +167,6 @@ def laborum():
 
     # Inicializamos las variables
     firstPage = "https://www.laborum.cl/empleos-publicacion-hoy.html"
-    path = "https://www.laborum.cl"
     offers = []
     links = []
 
@@ -186,7 +185,7 @@ def laborum():
       if tmp_pages is not None:
         last_pag = tmp_pages[-1].text.strip()
       else:
-        last_page = first_pag
+        last_pag = first_pag
     else:
       last_pag = last_pag.text.strip()
 
@@ -196,7 +195,7 @@ def laborum():
     # Recorremos todas las ofertas de principio a fin
     while first_pag <= last_pag:
       content = driver.page_source
-      soup = BeautifulSoup(content)
+      soup = BeautifulSoup(content, "html.parser")
 
       for offer in soup.findAll('a', attrs={'class': 'cdmEkq'}):
         tmp_link = offer.get('href')
@@ -273,7 +272,7 @@ def laborum():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('22:40').do(laborum)
+schedule.every().day.at('23:00').do(laborum)
 
 while True:
     schedule.run_pending()
