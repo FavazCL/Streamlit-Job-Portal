@@ -214,8 +214,9 @@ def laborum():
       driver.get("https://www.laborum.cl" + str(link))
 
       data = {}
-
+      print('STEP 2.1')
       try:
+          print('STEP 2.1.1')
           WebDriverWait(driver, 10).until(
               EC.presence_of_element_located((By.CLASS_NAME, 'dmYIZt')))
           content = driver.page_source
@@ -273,7 +274,7 @@ def laborum():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('23:15').do(laborum)
+schedule.every().day.at('23:25').do(laborum)
 
 while True:
     schedule.run_pending()
