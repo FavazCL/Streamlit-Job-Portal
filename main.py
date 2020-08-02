@@ -18,7 +18,7 @@ from github import Github
 # Chrome Options
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-#chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--no-sandbox")
 prefs = {"profile.managed_default_content_settings.images": 2}
@@ -272,7 +272,7 @@ def laborum():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('23:00').do(laborum)
+schedule.every().day.at('23:06').do(laborum)
 
 while True:
     schedule.run_pending()
