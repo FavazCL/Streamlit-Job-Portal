@@ -175,7 +175,7 @@ def laborum():
 
     content = driver.page_source
     soup = BeautifulSoup(content, "html.parser")
-
+    print('STEP 1')
     # Seleccionamos el número de paginación inicial y final
     first_pag = soup.find('button', attrs={'class': 'gENuBC'}).text.strip()
     last_pag = soup.find('button', attrs={'class': 'eDchar'})
@@ -208,7 +208,7 @@ def laborum():
 
       time.sleep(10)
       first_pag = first_pag + 1
-
+    print('STEP 2')
     # Obtenemos toda la información de cada oferta
     for link in links:
       driver.get("https://www.laborum.cl" + str(link))
@@ -249,7 +249,8 @@ def laborum():
     
       offers.append(data)
       time.sleep(10)
-
+    print('STEP 3')
+    print(len(offers))
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
     filename = "laborum-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
@@ -272,7 +273,7 @@ def laborum():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('23:06').do(laborum)
+schedule.every().day.at('23:15').do(laborum)
 
 while True:
     schedule.run_pending()
