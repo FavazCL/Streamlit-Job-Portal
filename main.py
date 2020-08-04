@@ -274,7 +274,7 @@ def laborum():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('23:25').do(laborum)
+schedule.every().day.at('22:50').do(laborum)
 
 while True:
     schedule.run_pending()
