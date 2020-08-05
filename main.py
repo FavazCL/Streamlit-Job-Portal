@@ -300,19 +300,24 @@ def bne():
 
     content = driver.page_source
     soup = BeautifulSoup(content, 'html.parser')
+    
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'paginacionOfertas')))
 
-    # Seleccionamos el número de paginacion inicial y final.
-    paginations = soup.findAll('a', attrs = {'data-pagina': True})
-    init = 0
-    finish = 0
+        # Seleccionamos el número de paginacion inicial y final.
+        paginations = soup.findAll('a', attrs = {'data-pagina': True})
+        init = 0
+        finish = 0
 
-    if (len(paginations) > 0):
-        if (len(paginations) == 1):
-            init = int(paginations[0].get('data-pagina'))
-            finish = init
-        else:
-            init = int(paginations[0].get('data-pagina'))
-            finish = int(paginations[-1].get('data-pagina'))
+        if (len(paginations) > 0):
+            if (len(paginations) == 1):
+                init = int(paginations[0].get('data-pagina'))
+                finish = init
+            else:
+                init = int(paginations[0].get('data-pagina'))
+                finish = int(paginations[-1].get('data-pagina'))
+    except TimeoutException:
+      print('Looking for much time..')
 
     # Implementar while desde la primera pagina, hasta la ultima
     while init <= finish:
