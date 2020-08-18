@@ -227,6 +227,9 @@ def laborum():
               if title.text.strip() == "No encontramos la página que buscás":
                   continue
               else:
+                  date_loc = soup.findAll('li', attrs = {'class': 'kgBqbG'})
+                  if date_loc is not None:
+                    
                   data['title'] = title.text.strip()
 
           company = soup.find('h2', attrs = {'class': 'bkFDjf'})
@@ -241,7 +244,10 @@ def laborum():
           if date_loc is not None:
               now = datetime.now()
               data['fecha'] = now.strftime("%d-%m-%Y %H:%M:%S")
-              data['location'] = date_loc[-1].text.strip()
+              if date_loc[-1].text.strip() is None:
+                data['location'] = 'No definido'
+              else:
+                data['location'] = date_loc[-1].text.strip()
     
           dur_sal_cat = soup.findAll('li', attrs = {'class': 'flsJOs'})
           if dur_sal_cat is not None:
@@ -457,7 +463,7 @@ def bne():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('20:30').do(laborum)
+schedule.every().day.at('20:20').do(laborum)
 schedule.every().day.at('23:05').do(bne)
 
 while True:
