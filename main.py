@@ -229,8 +229,7 @@ def laborum():
               else:
                   date_loc = soup.findAll('li', attrs = {'class': 'kgBqbG'})
                   if date_loc is not None:
-                    
-                  data['title'] = title.text.strip()
+                      data['title'] = title.text.strip()
 
           company = soup.find('h2', attrs = {'class': 'bkFDjf'})
           if company is not None:
