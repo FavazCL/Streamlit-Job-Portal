@@ -363,6 +363,9 @@ def bne():
             soup = BeautifulSoup(content, "html.parser")
         
             title = soup.find('div', attrs = {'class': 'titulo'})
+            if title is None:
+                continue
+            
             tmp_title = title.findAll('span')
         
             if (len(tmp_title) > 2):
