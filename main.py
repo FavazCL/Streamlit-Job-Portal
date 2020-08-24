@@ -466,7 +466,7 @@ def bne():
 # Señalamos que se ejecute todos los días a la hora fijada.
 schedule.every().day.at('19:30').do(chiletrabajos)
 schedule.every().day.at('20:20').do(laborum)
-schedule.every().day.at('23:05').do(bne)
+schedule.every().day.at('23:10').do(bne)
 
 while True:
     schedule.run_pending()
