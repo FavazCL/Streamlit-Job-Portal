@@ -140,7 +140,7 @@ def chiletrabajos():
     print('Step 2: Get all offers - OK')
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "chiletrabajos-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
+    filename = "chiletrabajos-" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
@@ -264,7 +264,7 @@ def laborum():
 
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "laborum-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
+    filename = "laborum-" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
@@ -308,13 +308,14 @@ def bne():
     content = driver.page_source
     soup = BeautifulSoup(content, 'html.parser')
     
+    init = 0
+    finish = 0
+    
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'paginacionOfertas')))
 
         # Seleccionamos el número de paginacion inicial y final.
         paginations = soup.findAll('a', attrs = {'data-pagina': True})
-        init = 0
-        finish = 0
 
         if (len(paginations) > 0):
             if (len(paginations) == 1):
@@ -324,7 +325,10 @@ def bne():
                 init = int(paginations[0].get('data-pagina'))
                 finish = int(paginations[-1].get('data-pagina'))
     except TimeoutException:
-      print('Looking for much time..')
+        print('Looking for much time..')
+        init = 100
+        finish = 0
+        print('ERROR al intentar procesar la paginación de ofertas..')
 
     # Implementar while desde la primera pagina, hasta la ultima
     while init <= finish:
@@ -446,7 +450,7 @@ def bne():
     print('Step 2: Get all offers - OK')
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "bne-" + now.strftime("%d-%m-%Y %H:%M:%S") + ".json"
+    filename = "bne-" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
@@ -466,8 +470,8 @@ def bne():
     print('Step 3: Push to github - OK')
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('19:30').do(chiletrabajos)
-schedule.every().day.at('20:20').do(laborum)
+schedule.every().day.at('19:20').do(chiletrabajos)
+schedule.every().day.at('20:10').do(laborum)
 schedule.every().day.at('23:10').do(bne)
 
 while True:
