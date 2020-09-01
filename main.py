@@ -308,14 +308,14 @@ def bne():
     content = driver.page_source
     soup = BeautifulSoup(content, 'html.parser')
     
-    init = 0
-    finish = 0
-    
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'paginacionOfertas')))
 
         # Seleccionamos el número de paginacion inicial y final.
         paginations = soup.findAll('a', attrs = {'data-pagina': True})
+
+        init = 0
+        finish = 0
 
         if (len(paginations) > 0):
             if (len(paginations) == 1):
