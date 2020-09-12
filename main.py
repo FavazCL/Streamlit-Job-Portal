@@ -470,9 +470,9 @@ def bne():
     print('Step 3: Push to github - OK')
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('23:53').do(chiletrabajos)
+schedule.every().day.at('00:02').do(bne)
+schedule.every().day.at('00:02').do(chiletrabajos)
 schedule.every().day.at('20:10').do(laborum)
-schedule.every().day.at('23:53').do(bne)
  
 while True:
     schedule.run_pending()
