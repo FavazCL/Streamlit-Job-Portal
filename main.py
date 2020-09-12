@@ -140,7 +140,7 @@ def chiletrabajos():
     print('Step 2: Get all offers - OK')
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "chiletrabajos-" + now.strftime("%d-%m-%Y") + ".json"
+    filename = "chiletrabajos-test" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
@@ -450,7 +450,7 @@ def bne():
     print('Step 2: Get all offers - OK')
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "bne-" + now.strftime("%d-%m-%Y") + ".json"
+    filename = "bne-test" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
@@ -470,10 +470,10 @@ def bne():
     print('Step 3: Push to github - OK')
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('23:35').do(chiletrabajos)
+schedule.every().day.at('23:53').do(chiletrabajos)
 schedule.every().day.at('20:10').do(laborum)
-schedule.every().day.at('23:35').do(bne)
-
+schedule.every().day.at('23:53').do(bne)
+ 
 while True:
     schedule.run_pending()
     time.sleep(1)
