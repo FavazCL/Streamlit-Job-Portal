@@ -318,8 +318,6 @@ def bne():
                 finish = int(paginations[-1].get('data-pagina'))
     except TimeoutException:
         print('Looking for much time..')
-        init = 100
-        finish = 0
 
     # Implementar while desde la primera pagina, hasta la ultima
     init = init
