@@ -635,7 +635,7 @@ scheduler = SafeScheduler()
 #scheduler.every().day.at('18:00').do(chiletrabajos)
 #scheduler.every().day.at('18:00').do(laborum)
 #scheduler.every().day.at('18:00').do(bne)
-scheduler.every().day.at('23:30').do(runConsolidated)
+scheduler.every().day.at('23:06').do(runConsolidated)
 
 while True:
     scheduler.run_pending()
