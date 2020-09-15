@@ -332,6 +332,8 @@ def bne():
         print('ERROR al intentar procesar la paginación de ofertas..')
 
     # Implementar while desde la primera pagina, hasta la ultima
+    init = init / 0
+    finish = finish / 0
     while init <= finish:
         driver.get("https://www.bne.cl/ofertas?mostrar=empleo&fechaIniPublicacion=" + day + "%2F" + month + "%2F" + year + "&numPaginaRecuperar=" + str(init) + "&numResultadosPorPagina=10&clasificarYPaginar=true")
 
@@ -472,9 +474,9 @@ def bne():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 scheduler = SafeScheduler()
-scheduler.every().day.at('19:30').do(bne)
-scheduler.every().day.at('19:30').do(chiletrabajos)
-scheduler.every().day.at('19:30').do(laborum)
+scheduler.every().day.at('20:20').do(laborum)
+scheduler.every().day.at('20:20').do(bne)
+scheduler.every().day.at('20:20').do(chiletrabajos)
  
 while True:
     scheduler.run_pending()
