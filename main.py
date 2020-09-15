@@ -1,3 +1,10 @@
+import time
+import json
+import schedule
+import os
+import requests
+import pandas as pd 
+from time import gmtime, strftime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -7,17 +14,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from safe_schedule import SafeScheduler
+from consolidated_functions import CargaDic
+from consolidated_functions import DiaAnterior
+from consolidated_functions import DIVIDETEXTO
+from consolidated_functions import MAPEA
+from consolidated_functions import VerificaArchivoDatos
 from bs4 import BeautifulSoup
 from numpy import array
 from datetime import datetime
 from datetime import date
-import time
-import json
-import schedule
-import os
 from github import Github
 
-# Chrome Options
+# Configuración inicial de Chrome
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 chrome_options.add_argument("--headless")
@@ -26,9 +34,7 @@ chrome_options.add_argument("--no-sandbox")
 prefs = {"profile.managed_default_content_settings.images": 2}
 chrome_options.add_experimental_option("prefs", prefs)
 
-
 def chiletrabajos():
-    print('RUNNING CHILETRABAJOS')
     # Abrimos el navegador Chrome
     driver = webdriver.Chrome(executable_path=os.environ.get(
         "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
@@ -36,6 +42,7 @@ def chiletrabajos():
     # Nos logeamos en el portal para obtener los datos restringidos.
     driver.get("https://www.chiletrabajos.cl/chtlogin")
 
+    # En versiones superiores se debe cambiar a un correo y contraseña privado.***
     username = driver.find_element_by_id("username")
     password = driver.find_element_by_id("password")
 
@@ -62,10 +69,7 @@ def chiletrabajos():
     for pagination in soup.findAll('a', attrs={'class': 'page-link'}):
         paginations.append(pagination.get('href'))
 
-    # Eliminamos links duplicados
     paginations = list(set(paginations))
-
-    # Agregamos el link inicial
     paginations.insert(0, firstPage)
 
     # Obtenemos todos los links de las ofertas de trabajo por paginación
@@ -82,8 +86,7 @@ def chiletrabajos():
                 links.append(tmp_link.get('href'))
 
         time.sleep(10)
-    print('First step: Get all links - OK')
-    # Eliminamos links duplicados
+
     links = list(set(links))
 
     # Obtenemos toda la información de cada oferta
@@ -138,31 +141,25 @@ def chiletrabajos():
         offers.append(data)
 
         time.sleep(10)
-    print('Step 2: Get all offers - OK')
+
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "chiletrabajos-test" + now.strftime("%d-%m-%Y") + ".json"
+    filename = "chiletrabajos-" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
     token = "29e578fceb764670077aee08fb42dba51b7eb744"
-
     repo = "FavazCL/WS-Ofertas"
-
     g = Github(token)
-
     repo = g.get_repo(repo)
     repo.create_file(
-        path='chiletrabajos-tes/' + filename,
+        path='chiletrabajos/' + filename,
         message="Se agregaron nuevas ofertas desde: " + filename,
         content=result,
         branch="master"
     )
-    print('3 STEP: Push to github - OK')
-
 
 def laborum():
-    print('RUNNING LABORUM')
     # Abrimos el navegador Chrome
     driver = webdriver.Chrome(executable_path=os.environ.get(
         "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
@@ -191,8 +188,8 @@ def laborum():
     else:
       last_pag = last_pag.text.strip()
 
-    first_pag = int(first_pag) / 0
-    last_pag = int(last_pag) / 0 
+    first_pag = int(first_pag)
+    last_pag = int(last_pag) 
   
     # Recorremos todas las ofertas de principio a fin
     while first_pag <= last_pag:
@@ -210,7 +207,7 @@ def laborum():
 
       time.sleep(10)
       first_pag = first_pag + 1
-    print('STEP 1: Get all links - OK')
+
     # Obtenemos toda la información de cada oferta
     for link in links:
       driver.get("https://www.laborum.cl" + str(link))
@@ -261,7 +258,6 @@ def laborum():
     
       offers.append(data)
       time.sleep(10)
-    print('STEP 2: Get all offers - OK')
 
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
@@ -270,22 +266,17 @@ def laborum():
 
     # Enviamos el archivo creado a github
     token = "29e578fceb764670077aee08fb42dba51b7eb744"
-
     repo = "FavazCL/WS-Ofertas"
-
     g = Github(token)
-
     repo = g.get_repo(repo)
     repo.create_file(
-        path='laborumtest/' + filename,
+        path='laborum/' + filename,
         message="Se agregaron nuevas ofertas desde: " + filename,
         content=result,
         branch="master"
     )
-    print('STEP 3: Push to github - OK')
 
 def bne():
-    print('RUNNING BNE')
     # Abrimos el navegador Chrome
     driver = webdriver.Chrome(executable_path=os.environ.get(
         "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
@@ -329,17 +320,15 @@ def bne():
         print('Looking for much time..')
         init = 100
         finish = 0
-        print('ERROR al intentar procesar la paginación de ofertas..')
 
     # Implementar while desde la primera pagina, hasta la ultima
-    init = init / 0
-    finish = finish / 0
+    init = init
+    finish = finish
     while init <= finish:
         driver.get("https://www.bne.cl/ofertas?mostrar=empleo&fechaIniPublicacion=" + day + "%2F" + month + "%2F" + year + "&numPaginaRecuperar=" + str(init) + "&numResultadosPorPagina=10&clasificarYPaginar=true")
 
         try:
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'resultadoOfertas')))
-            print("Page is ready")
             content = driver.page_source
             soup = BeautifulSoup(content, "html.parser")
             
@@ -356,7 +345,6 @@ def bne():
     
         init = init + 1
         time.sleep(7)
-    print('Step 1: Get all links - OK')
     
     # Ingresamos a cada oferta laboral
     for offer in links:
@@ -367,7 +355,6 @@ def bne():
     
         try:
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'width1000')))
-            print("Page is ready")
             content = driver.page_source
             soup = BeautifulSoup(content, "html.parser")
         
@@ -450,19 +437,16 @@ def bne():
     
         offers.append(data)
         time.sleep(5)
-    print('Step 2: Get all offers - OK')
+
     # Creamos un archivo json de las ofertas.
     now = datetime.now()
-    filename = "bne-test" + now.strftime("%d-%m-%Y") + ".json"
+    filename = "bne-" + now.strftime("%d-%m-%Y") + ".json"
     result = json.dumps(offers, ensure_ascii=False)
 
     # Enviamos el archivo creado a github
     token = "29e578fceb764670077aee08fb42dba51b7eb744"
-
     repo = "FavazCL/WS-Ofertas"
-
     g = Github(token)
-
     repo = g.get_repo(repo)
     repo.create_file(
         path='bne/' + filename,
@@ -470,14 +454,189 @@ def bne():
         content=result,
         branch="master"
     )
-    print('Step 3: Push to github - OK')
+
+def runConsolidated():
+  PathArchivosMaestros = "master_files\\"
+  URLConsolidado  =  "https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/consolidado/"
+  URLLabPrefijo = 'https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/laborum/laborum-'
+  URLChiPrefijo = 'https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/chiletrabajos/chiletrabajos-'
+  URLBnePrefijo = 'https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/bne/bne-'
+
+  #Carga archivo de control de fechas de carga
+  FechaProceso = pd.read_csv(PathArchivosMaestros + "FechasProcesos.csv", sep=';') 
+  FechaProceso2 = FechaProceso.copy()
+  FechaProceso.head()
+  
+  #Carga diccionarios para el mapeo
+  region_dict , categoriaLABORUM_dict, categoriaCHILETRABAJO_dict , categoriaBNE_dict = CargaDic(PathArchivosMaestros)
+
+  Fechahoy = int(strftime("%Y%m%d", gmtime()))
+  print(Fechahoy,';')
+
+  for ind in FechaProceso.index: 
+    FechaArchivo = FechaProceso['fecha2'][ind]
+    print(Fechahoy,'/')
+    if FechaArchivo <= Fechahoy:
+        url=URLConsolidado + 'Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
+        #url = 'https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
+        print(url)
+        request = requests.get(url)
+        if request.status_code == 200:
+            print('la pagina existe')
+        else:
+            #Procesa archivo Laborum
+            url = VerificaArchivoDatos(URLLabPrefijo, FechaArchivo, FechaProceso2, FechaProceso['fecha1'][ind], FechaProceso['fecha2'][ind])
+            request = requests.get(url)
+            if request.status_code == 200:
+                #print('Web site exists')
+                #CArga Archivo
+                print(url)
+                dataLab = pd.read_json(url)
+                dfLaborum = pd.DataFrame(dataLab)
+                dfLaborum['FechaDato'] = FechaArchivo
+                dfLaborum['Num'] = 1
+                #toma las columnas a trabajar y las agrupa
+                dfLaborum2 = dfLaborum[["location", "category", "FechaDato", "Num"]].copy()
+                dfLaborum2['Origen'] = 'Laborum'
+                dfLaborum2['Region'] = 'Otros'
+                dfLaborum2['Categoria'] = 'Otros'
+                for ind2 in dfLaborum2.index: 
+                    comuna = dfLaborum2['location'][ind2]
+                    comuna2 = DIVIDETEXTO(comuna, 0)
+                    Region = MAPEA(region_dict, comuna2) 
+                    #comuna2 = comuna.split(',')
+                    #Region = MAPEA(region_dict, comuna2[0]) 
+                    category = dfLaborum2['category'][ind2]
+                    Categoria = MAPEA(categoriaLABORUM_dict, category) 
+                    dfLaborum2.loc[ind2,'Region'] = Region
+                    dfLaborum2.loc[ind2, 'Categoria'] = Categoria
+                dfLaborum3 = dfLaborum2.groupby(["Origen", "Region", "Categoria", "FechaDato"])['Num'].count().reset_index(name='Count')
+                #dfLaborum3
+
+            #Procesa archivo chiletrabajos
+            url = VerificaArchivoDatos(URLChiPrefijo, FechaArchivo, FechaProceso2, FechaProceso['fecha1'][ind], FechaProceso['fecha2'][ind])
+            request = requests.get(url)
+            if request.status_code == 200:
+                #print('Web site exists')
+                #CArga Archivo
+                dataLab = pd.read_json(url)
+                chiletrabajos = pd.DataFrame(dataLab)
+                chiletrabajos['FechaDato'] = FechaArchivo
+                chiletrabajos['Num'] = 1
+                #toma las columnas a trabjar y las agrupa
+                chiletrabajos2 = chiletrabajos[["Ubicación", "Categoría", "FechaDato", "Num"]].copy()
+                chiletrabajos2['Origen'] = 'Chiletrabajos2'
+                chiletrabajos2['Region'] = 'Otros'
+                chiletrabajos2['Categoria'] = 'Otros'
+                for ind2 in chiletrabajos2.index: 
+                    comuna = chiletrabajos2['Ubicación'][ind2] 
+                    Region = MAPEA(region_dict, comuna) 
+                    category = chiletrabajos2['Categoría'][ind2]
+                    Categoria = MAPEA(categoriaCHILETRABAJO_dict, category) 
+                    chiletrabajos2.loc[ind2,'Region'] = Region
+                    chiletrabajos2.loc[ind2, 'Categoria'] = Categoria
+                dfchiletrabajos3 = chiletrabajos2.groupby(["Origen", "Region", "Categoria", "FechaDato"])['Num'].count().reset_index(name='Count')
+                #dfchiletrabajos3                   
+
+
+                
+            #Procesa archivo bne
+            url = VerificaArchivoDatos(URLBnePrefijo, FechaArchivo, FechaProceso2, FechaProceso['fecha1'][ind], FechaProceso['fecha2'][ind])
+            request = requests.get(url)
+            if request.status_code == 200:
+                #print('Web site exists')
+                #CArga Archivo
+                dataLab = pd.read_json(url)
+                bne = pd.DataFrame(dataLab)
+                bne['FechaDato'] = FechaArchivo
+                bne['Num'] = 1                
+                #toma las columnas a trabjar y las agrupa
+                bne2 = bne[["Ubicacion", "Ocupacion", "FechaDato", "Num"]].copy()
+                bne2['Origen'] = 'Bolsa Nacional de Empleo'
+                bne2['Region'] = 'Otros'
+                bne2['Categoria'] = 'Otros'
+                for ind2 in bne2.index: 
+                    comuna = bne2['Ubicacion'][ind2] 
+                    comuna2 = DIVIDETEXTO(comuna, 1)
+                    Region = MAPEA(region_dict, comuna2)                     
+                    #comuna2 = comuna.split(',')                    
+                    #Region = MAPEA(region_dict, comuna2[1]) 
+                    category = bne2['Ocupacion'][ind2]
+                    Categoria = MAPEA(categoriaBNE_dict, category) 
+                    bne2.loc[ind2,'Region'] = Region
+                    bne2.loc[ind2, 'Categoria'] = Categoria
+                dfbne3 = bne2.groupby(["Origen", "Region", "Categoria", "FechaDato"])['Num'].count().reset_index(name='Count')
+                #bne3  
+                
+                #Une los datos
+                UnePrimeros = pd.concat([dfLaborum3, dfchiletrabajos3], axis=0)
+                UneTodos = pd.concat([UnePrimeros, dfbne3], axis=0)
+                
+                #Genera agregados pais                
+                dfpais = UneTodos.groupby(["Origen", "Categoria", "FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfpais['Region'] = 'Chile'
+                dfTotalEmpleo = UneTodos.groupby(["Region", "Categoria", "FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfTotalEmpleo['Origen'] = 'Laborum+ChileTrabajos+Bne'
+                dfPaisTodosPortales = UneTodos.groupby(["Categoria", "FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfPaisTodosPortales['Region'] = 'Chile'
+                dfPaisTodosPortales['Origen'] = 'Laborum+ChileTrabajos+Bne'
+                
+                dfTotalCategoria = UneTodos.groupby(["Origen", "Region", "FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfTotalCategoria['Categoria'] = 'TodasLasCategorias'
+                dfPaisTodasCategorias = UneTodos.groupby(["Origen", "FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfPaisTodasCategorias['Region'] = 'Chile'
+                dfPaisTodasCategorias['Categoria'] = 'TodasLasCategorias'
+
+                dfPaisTodasCategoriasRegion = UneTodos.groupby(["FechaDato"])['Count'].sum().reset_index(name='Count')
+                dfPaisTodasCategoriasRegion['Region'] = 'Chile'
+                dfPaisTodasCategoriasRegion['Categoria'] = 'TodasLasCategorias'                
+                dfPaisTodasCategoriasRegion['Origen'] = 'Laborum+ChileTrabajos+Bne'            
+                
+                UneTodos = pd.concat([UneTodos, dfpais], axis=0)
+                UneTodos = pd.concat([UneTodos, dfTotalEmpleo], axis=0)
+                UneTodos = pd.concat([UneTodos, dfPaisTodosPortales], axis=0)
+                UneTodos = pd.concat([UneTodos, dfTotalCategoria], axis=0)
+                UneTodos = pd.concat([UneTodos, dfPaisTodasCategorias], axis=0)
+                UneTodos = pd.concat([UneTodos, dfPaisTodasCategoriasRegion], axis=0)
+                print(UneTodos)
+                UneTodos.reset_index(drop=True, inplace=True)
+                
+                nombre = 'Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
+                print(nombre)
+                json = UneTodos.to_json();
+                print(json)
+                
+                # Enviamos el archivo creado a github
+                token = "4dd77f18017dcbfe07d2446ee6190b88e0bf1b90"
+                repo = "FavazCL/WS-Ofertas"
+                g = Github(token)
+                repo = g.get_repo(repo)
+                repo.create_file(
+                    path = 'consolidado-test/' + nombre,
+                    message = "Se agregaró un nuevo consolidado " + nombre,
+                    content = json,
+                    branch = "master"
+                )
+                
+                #print(UneTodos.toJson())
+                #salida a .csv
+                #nombre = PathArchivosMaestros + 'Consolidado-' + FechaProceso['fecha1'][ind] +'.csv'
+                #UneTodos.to_csv(nombre)
+                
+                #print(nombre)
+                #salida a .json
+                #UneTodos.to_json(r'Consolidado-' + FechaProceso['fecha1'][ind] +'.json')
+                #print(result)
+    else:
+        break
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 scheduler = SafeScheduler()
-scheduler.every().day.at('21:01').do(laborum)
-scheduler.every().day.at('21:01').do(bne)
-scheduler.every().day.at('21:01').do(chiletrabajos)
- 
+#scheduler.every().day.at('18:00').do(chiletrabajos)
+#scheduler.every().day.at('18:00').do(laborum)
+#scheduler.every().day.at('18:00').do(bne)
+scheduler.every().day.at('22:30').(runConsolidated)
+
 while True:
     scheduler.run_pending()
     time.sleep(1)
