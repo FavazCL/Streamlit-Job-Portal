@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from safe_schedule import SafeScheduler
 from bs4 import BeautifulSoup
 from numpy import array
 from datetime import datetime
@@ -152,7 +153,7 @@ def chiletrabajos():
 
     repo = g.get_repo(repo)
     repo.create_file(
-        path='chiletrabajos/' + filename,
+        path='chiletrabajos-tes/' + filename,
         message="Se agregaron nuevas ofertas desde: " + filename,
         content=result,
         branch="master"
@@ -190,9 +191,9 @@ def laborum():
     else:
       last_pag = last_pag.text.strip()
 
-    first_pag = int(first_pag)
-    last_pag = int(last_pag)
-
+    first_pag = int(first_pag) / 0
+    last_pag = int(last_pag) / 0 
+  
     # Recorremos todas las ofertas de principio a fin
     while first_pag <= last_pag:
       content = driver.page_source
@@ -276,7 +277,7 @@ def laborum():
 
     repo = g.get_repo(repo)
     repo.create_file(
-        path='laborum/' + filename,
+        path='laborumtest/' + filename,
         message="Se agregaron nuevas ofertas desde: " + filename,
         content=result,
         branch="master"
@@ -470,10 +471,11 @@ def bne():
     print('Step 3: Push to github - OK')
 
 # Señalamos que se ejecute todos los días a la hora fijada.
-schedule.every().day.at('00:02').do(bne)
-schedule.every().day.at('00:02').do(chiletrabajos)
-schedule.every().day.at('20:10').do(laborum)
+scheduler = SafeScheduler()
+scheduler.every().day.at('19:30').do(bne)
+scheduler.every().day.at('19:30').do(chiletrabajos)
+scheduler.every().day.at('19:30').do(laborum)
  
 while True:
-    schedule.run_pending()
+    scheduler.run_pending()
     time.sleep(1)
