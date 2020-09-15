@@ -474,9 +474,9 @@ def bne():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 scheduler = SafeScheduler()
-scheduler.every().day.at('20:20').do(laborum)
-scheduler.every().day.at('20:20').do(bne)
-scheduler.every().day.at('20:20').do(chiletrabajos)
+scheduler.every().day.at('21:01').do(laborum)
+scheduler.every().day.at('21:01').do(bne)
+scheduler.every().day.at('21:01').do(chiletrabajos)
  
 while True:
     scheduler.run_pending()

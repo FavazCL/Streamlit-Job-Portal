@@ -17,7 +17,7 @@ class SafeScheduler(Scheduler):
     whether other jobs will run or if they'll crash the entire script.
     """
 
-    def __init__(self, reschedule_on_failure=True):
+    def __init__(self, reschedule_on_failure=False):
         """
         If reschedule_on_failure is True, jobs will be rescheduled for their
         next run as if they had completed successfully. If False, they'll run
