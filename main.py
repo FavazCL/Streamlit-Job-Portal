@@ -603,7 +603,7 @@ def runConsolidated():
                 
                 nombre = 'Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
                 print(nombre)
-                json = UneTodos.to_json();
+                json = UneTodos.to_json()
                 print(json)
                 
                 # Enviamos el archivo creado a github
@@ -618,15 +618,6 @@ def runConsolidated():
                     branch = "master"
                 )
                 
-                #print(UneTodos.toJson())
-                #salida a .csv
-                #nombre = PathArchivosMaestros + 'Consolidado-' + FechaProceso['fecha1'][ind] +'.csv'
-                #UneTodos.to_csv(nombre)
-                
-                #print(nombre)
-                #salida a .json
-                #UneTodos.to_json(r'Consolidado-' + FechaProceso['fecha1'][ind] +'.json')
-                #print(result)
     else:
         break
 
@@ -635,7 +626,7 @@ scheduler = SafeScheduler()
 #scheduler.every().day.at('18:00').do(chiletrabajos)
 #scheduler.every().day.at('18:00').do(laborum)
 #scheduler.every().day.at('18:00').do(bne)
-scheduler.every().day.at('23:06').do(runConsolidated)
+scheduler.every().day.at('23:19').do(runConsolidated)
 
 while True:
     scheduler.run_pending()
