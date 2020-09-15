@@ -470,7 +470,9 @@ def runConsolidated():
   #Carga diccionarios para el mapeo
   region_dict , categoriaLABORUM_dict, categoriaCHILETRABAJO_dict , categoriaBNE_dict = CargaDic(PathArchivosMaestros)
 
-  Fechahoy = int(strftime("%Y%m%d", gmtime()))
+  now = datetime.now()
+  Fechahoy = int(now.strftime("%Y%m%d"))
+  #Fechahoy = int(strftime("%Y%m%d", gmtime()))
   print(Fechahoy,';')
 
   for ind in FechaProceso.index: 
@@ -612,7 +614,7 @@ def runConsolidated():
                 g = Github(token)
                 repo = g.get_repo(repo)
                 repo.create_file(
-                    path = 'consolidado-test/' + nombre,
+                    path = 'consolidado-test2/' + nombre,
                     message = "Se agregaró un nuevo consolidado " + nombre,
                     content = json,
                     branch = "master"
@@ -626,7 +628,7 @@ scheduler = SafeScheduler()
 #scheduler.every().day.at('18:00').do(chiletrabajos)
 #scheduler.every().day.at('18:00').do(laborum)
 #scheduler.every().day.at('18:00').do(bne)
-scheduler.every().day.at('23:26').do(runConsolidated)
+scheduler.every().day.at('23:37').do(runConsolidated)
 
 while True:
     scheduler.run_pending()
