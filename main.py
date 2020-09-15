@@ -473,15 +473,12 @@ def runConsolidated():
   now = datetime.now()
   Fechahoy = int(now.strftime("%Y%m%d"))
   #Fechahoy = int(strftime("%Y%m%d", gmtime()))
-  print(Fechahoy,';')
 
   for ind in FechaProceso.index: 
     FechaArchivo = FechaProceso['fecha2'][ind]
-    print(Fechahoy,'/')
     if FechaArchivo <= Fechahoy:
         url=URLConsolidado + 'Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
         #url = 'https://raw.githubusercontent.com/FavazCL/WS-Ofertas/master/Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
-        print(url)
         request = requests.get(url)
         if request.status_code == 200:
             print('la pagina existe')
@@ -490,9 +487,7 @@ def runConsolidated():
             url = VerificaArchivoDatos(URLLabPrefijo, FechaArchivo, FechaProceso2, FechaProceso['fecha1'][ind], FechaProceso['fecha2'][ind])
             request = requests.get(url)
             if request.status_code == 200:
-                #print('Web site exists')
                 #CArga Archivo
-                print(url)
                 dataLab = pd.read_json(url)
                 dfLaborum = pd.DataFrame(dataLab)
                 dfLaborum['FechaDato'] = FechaArchivo
@@ -600,13 +595,10 @@ def runConsolidated():
                 UneTodos = pd.concat([UneTodos, dfTotalCategoria], axis=0)
                 UneTodos = pd.concat([UneTodos, dfPaisTodasCategorias], axis=0)
                 UneTodos = pd.concat([UneTodos, dfPaisTodasCategoriasRegion], axis=0)
-                print(UneTodos)
                 UneTodos.reset_index(drop=True, inplace=True)
                 
                 nombre = 'Consolidado-' + FechaProceso['fecha1'][ind] +'.json'
-                print(nombre)
                 json = UneTodos.to_json()
-                print(json)
                 
                 # Enviamos el archivo creado a github
                 token = "4dd77f18017dcbfe07d2446ee6190b88e0bf1b90"
@@ -614,8 +606,8 @@ def runConsolidated():
                 g = Github(token)
                 repo = g.get_repo(repo)
                 repo.create_file(
-                    path = 'consolidado-test2/' + nombre,
-                    message = "Se agregaró un nuevo consolidado " + nombre,
+                    path = 'consolidado/' + nombre,
+                    message = "Se agregaró un nuevo consolidado: " + nombre,
                     content = json,
                     branch = "master"
                 )
@@ -625,10 +617,10 @@ def runConsolidated():
 
 # Señalamos que se ejecute todos los días a la hora fijada.
 scheduler = SafeScheduler()
-#scheduler.every().day.at('18:00').do(chiletrabajos)
-#scheduler.every().day.at('18:00').do(laborum)
-#scheduler.every().day.at('18:00').do(bne)
-scheduler.every().day.at('23:37').do(runConsolidated)
+scheduler.every().day.at('17:45').do(chiletrabajos)
+scheduler.every().day.at('17:45').do(laborum)
+scheduler.every().day.at('17:45').do(bne)
+scheduler.every().day.at('17:45').do(runConsolidated)
 
 while True:
     scheduler.run_pending()
